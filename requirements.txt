@@ -1,2 +1,3 @@
 requests
-dash
+pandas
+python-dotenv
