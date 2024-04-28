@@ -48,3 +48,8 @@ Note that running the ETLs populate the following tables in the SQLite db:
 - silver_prices
 - silver_weather
 - gold_cpw (consumption, prices, and weather data all in one dataset)
+
+### Running the application
+1. Ensure you have streamlit installed. You can install streamlit writing `pip install streamlit` in your terminal.
+2. Ensure that you have all requirements (dependencies) installed in your virtual environment: `pip install -r requirements.txt`.
+3. Run the application `streamlit run src\dsp\etl\application.py`
