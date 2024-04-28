@@ -7,8 +7,8 @@ from etl.silver_prices import etl_silver_prices
 from etl.silver_weather import etl_silver_weather
 
 # Bronze
-start_date = "2024-03-0"
-end_date = "2024-03-30"
+start_date = "2024-03-01"
+end_date = "2024-03-28"
 
 etl_bronze_consumption(start_date, end_date)
 etl_bronze_prices(start_date, end_date)
