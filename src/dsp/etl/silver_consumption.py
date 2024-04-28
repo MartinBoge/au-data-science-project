@@ -1,4 +1,4 @@
-from .utils import upsert_df_to_sql_table, read_sql_table
+from .utils import read_sql_table, upsert_df_to_sql_table
 
 
 def etl_silver_consumption() -> None:
