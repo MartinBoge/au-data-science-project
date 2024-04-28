@@ -33,9 +33,14 @@ def upsert_df_to_sql_table(table_name: str, df: pd.DataFrame) -> None:
     else:
         df_to_write = df
 
-    df_to_write.to_sql(
-        name=table_name,
-        con=sqlite3.connect(_database_path()),
-        if_exists="replace",
-        index=False,
-    )
+    if df_to_write.shape[0]>0:
+
+        df_to_write.to_sql(
+            name=table_name,
+            con=sqlite3.connect(_database_path()),
+            if_exists="replace",
+            index=False,
+        )
+
+    else:
+        print("No rows to write")
