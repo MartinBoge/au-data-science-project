@@ -33,8 +33,7 @@ def etl_bronze_consumption(
 
     if response.status_code != 200:
         raise Exception(
-            f"Energi Data Service API - responded with status code {
-                response.status_code}"
+            f"Energi Data Service API - responded with status code {response.status_code}"
         )
 
     data = defaultdict(list)
