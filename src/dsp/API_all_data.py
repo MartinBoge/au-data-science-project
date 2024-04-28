@@ -2,7 +2,7 @@
 # At first we import the libraries installed in our requirements.txt
 
 import requests
-import pandas
+import pandas as pd
 
 # Unlike other API's where params can be specified in addition to the URL
 # The documentation for Energinets API emply that all parameters are specified in the URL.
@@ -26,7 +26,6 @@ records = result.get('records', [])
 
 # Save our data in a DataFrame
 df = pd.DataFrame(records)
-
 
 
 # Inspecting the Dataframe, we can tell that we still have data regarding "erhverv".
