@@ -35,8 +35,7 @@ def etl_bronze_weather(
     if response.status_code != 200:
         print(response.json()["message"])
         raise Exception(
-            f"DMI API - responded with status code {
-                response.status_code}. Message: {response.json()['message']}"
+            f"DMI API - responded with status code {response.status_code}. Message: {response.json()['message']}"
         )
 
     data = defaultdict(list)
