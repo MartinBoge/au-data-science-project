@@ -1,20 +1,23 @@
-import requests
-from .utils import upsert_df_to_sql_table
-import pandas as pd
-from datetime import datetime
 import json
 from collections import defaultdict
+from datetime import datetime
+
+import pandas as pd
+import requests
+
+from .utils import upsert_df_to_sql_table
 
 
-def etl_bronze_consumption() -> None:
+def etl_bronze_consumption(
+    start_date: str,
+    end_date: str,
+) -> None:
     print("Running ETL - bronze_consumption")
     # API spec: https://www.energidataservice.dk/guides/api-guides
     # Dataset: https://www.energidataservice.dk/tso-electricity/PrivIndustryConsumptionHour
     energi_data_service_api_url = (
         "https://api.energidataservice.dk/dataset/PrivIndustryConsumptionHour"
     )
-    start_date = "2024-02-01"
-    end_date = "2024-02-02"
 
     parameters = {
         "start": start_date,

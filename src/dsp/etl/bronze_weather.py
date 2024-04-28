@@ -1,13 +1,18 @@
-from dotenv import load_dotenv
-from .utils import upsert_df_to_sql_table
-from datetime import datetime
-from collections import defaultdict
-import pandas as pd
 import os
+from collections import defaultdict
+from datetime import datetime
+
+import pandas as pd
 import requests
+from dotenv import load_dotenv
+
+from .utils import upsert_df_to_sql_table
 
 
-def etl_bronze_weather() -> None:
+def etl_bronze_weather(
+    start_date: str,
+    end_date: str,
+) -> None:
     print("Running ETL - bronze_weather")
     # API spec: https://opendatadocs.dmi.govcloud.dk/en/APIs/Meteorological_Observation_API
     dmi_api_url = "https://dmigw.govcloud.dk/v2/metObs/collections/observation/items"
@@ -15,14 +20,13 @@ def etl_bronze_weather() -> None:
     load_dotenv()
     api_key = os.environ.get("DMI_API_KEY")
 
-    from_date = "2024-02-01"
-    to_date = "2024-02-01"
-
     station_id = "06074"
+    limit = 300_000
 
     parameters = {
         "api-key": api_key,
-        "datetime": f"{from_date}T00:00:00Z/{to_date}T06:00:00Z",
+        "limit": limit,
+        "datetime": f"{start_date}T00:00:00Z/{end_date}T00:00:00Z",
         "stationId": station_id,
     }
 
@@ -37,7 +41,14 @@ def etl_bronze_weather() -> None:
 
     data = defaultdict(list)
 
-    for feature in response.json()["features"]:
+    features = response.json()["features"]
+
+    if len(features) == limit:
+        raise Exception(
+            "The request limit of 300000 observations for the DMI API was reached."
+        )
+
+    for feature in features:
         properties = feature["properties"]
 
         observed = datetime.strptime(
