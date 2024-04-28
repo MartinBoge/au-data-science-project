@@ -12,8 +12,7 @@ To setup local development environment:
 
 1. Ensure python version: `python -V`.
 2. Setup virtual env: `python -m venv .venv`.
-3. Activate: `.venv/scripts/activate.ps1`.
-4. Install dependencies: `pip install -r requirements.txt`.
+3. Open a new terminal and run `pip install -r requirements.txt`.
 
 ### Workflow - how to add a feature
 
