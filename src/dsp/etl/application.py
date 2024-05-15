@@ -189,6 +189,12 @@ def analysis_page():
         plt.title('SVM: Actual vs Predicted Values')
         st.pyplot(plt)
 
+def analysis_page():
+
+    # Dataframe
+    # Display a preview of the Dataframe
+    st.write('### Model Summary')
+    st.write(df.head(10))
 
 # Sidebar for navigation
 
