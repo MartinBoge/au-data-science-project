@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import altair as alt
 import seaborn as sps
-from utils import read_sql_table
+from etl.utils import read_sql_table
 import statsmodels.api as sm
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
@@ -105,11 +105,6 @@ def exploration_page():
         )
     )
     st.altair_chart(heatmap + text, use_container_width=True)
-
-import streamlit as st
-import pandas as pd
-import statsmodels.api as sm
-from utils import read_sql_table
 
 def analysis_page():
     st.title('Data Analysis')
