@@ -17,7 +17,7 @@ def exploration_page():
     # Reading in our datatable
     df = read_sql_table("gold_cpw")
     # Define available variables to choose from
-    available_variables = ['spot_price_dkk', 'temp_mean_past1h', 'wind_speed_past1h']
+    available_variables = ['spot_price_dkk', 'temp_mean_past1h', 'wind_speed_past1h', 'humidity_past1h', 'precip_past1h']
 
     #### Sidebar ####
     # Sidebar - User Input
@@ -28,7 +28,7 @@ def exploration_page():
 
     # Sidebar - Select variable for histogram and boxplot
     visualization_variable = st.sidebar.selectbox('Select Variable for Histogram & Boxplot',
-        ['consumption_kwh', 'spot_price_dkk', 'temp_mean_past1h', 'wind_speed_past1h'], index=0)
+        ['consumption_kwh', 'spot_price_dkk', 'temp_mean_past1h', 'wind_speed_past1h', 'humidity_past1h', 'precip_past1h'], index=0)
  
     #### Application ####
     # App title
@@ -189,6 +189,12 @@ def analysis_page():
         plt.title('SVM: Actual vs Predicted Values')
         st.pyplot(plt)
 
+def analysis_page():
+
+    # Dataframe
+    # Display a preview of the Dataframe
+    st.write('### Model Summary')
+    st.write(df.head(10))
 
 # Sidebar for navigation
 
