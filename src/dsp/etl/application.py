@@ -3,6 +3,13 @@ import pandas as pd
 import altair as alt
 import seaborn as sps
 from utils import read_sql_table
+import statsmodels.api as sm
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error, r2_score
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.svm import SVR
+from statsmodels.tsa.holtwinters import ExponentialSmoothing
 
 # Define the navigation structure
 def exploration_page():
@@ -99,10 +106,89 @@ def exploration_page():
     )
     st.altair_chart(heatmap + text, use_container_width=True)
 
-def analysis_page():
+import streamlit as st
+import pandas as pd
+import statsmodels.api as sm
+from utils import read_sql_table
 
+def analysis_page():
     st.title('Data Analysis')
-    st.write("This page is currently empty.")
+    
+    # Load data
+    df = read_sql_table("gold_cpw")
+    
+    # Convert data types
+    df['spot_price_dkk'] = pd.to_numeric(df['spot_price_dkk'], errors='coerce')
+    df['temp_mean_past1h'] = pd.to_numeric(df['temp_mean_past1h'], errors='coerce')
+    df['wind_speed_past1h'] = pd.to_numeric(df['wind_speed_past1h'], errors='coerce')
+    df['humidity_past1h'] = pd.to_numeric(df['humidity_past1h'], errors='coerce')
+    df['precip_past1h'] = pd.to_numeric(df['precip_past1h'], errors='coerce')
+
+    # Prepare data for models
+    X = df[['spot_price_dkk', 'temp_mean_past1h', 'wind_speed_past1h', 'humidity_past1h', 'precip_past1h']]
+    y = df['consumption_kwh']
+    
+    # Add a constant term for the intercept (required for linear regression)
+    X = sm.add_constant(X)  
+
+    # Split the data into training and testing sets
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+    # Button to run models
+    if st.button('Run Models'):
+        # Linear Regression
+        st.header('Linear Regression')
+        model_lr = sm.OLS(y_train, X_train).fit()
+        y_pred_lr = model_lr.predict(X_test)
+        mse_lr = mean_squared_error(y_test, y_pred_lr)
+        r2_lr = r2_score(y_test, y_pred_lr)
+        st.write('### Linear Regression Model Summary')
+        st.text(str(model_lr.summary()))
+        st.write('### Linear Regression Prediction Accuracy')
+        st.write(f'Mean Squared Error: {mse_lr:,.2f}')
+        st.write(f'R-squared: {r2_lr:.2f}')
+        
+        # Random Forest Regression
+        st.header('Random Forest Regression')
+        rf_model = RandomForestRegressor(n_estimators=200, bootstrap=True, random_state=42)
+        rf_model.fit(X_train, y_train)
+        y_pred_rf = rf_model.predict(X_test)
+        mse_rf = mean_squared_error(y_test, y_pred_rf)
+        r2_rf = r2_score(y_test, y_pred_rf)
+        st.write('### Random Forest Model Performance')
+        st.write(f'Mean Squared Error: {mse_rf:,.2f}')
+        st.write(f'R-squared: {r2_rf:.2f}')
+
+        # Feature Importance Plot (for Random Forest)
+        st.write('### Feature Importance Plot (Random Forest)')
+        feature_importances = pd.Series(rf_model.feature_importances_, index=X_train.columns)
+        fig_rf, ax_rf = plt.subplots()
+        feature_importances.nlargest(10).plot(kind='barh', ax=ax_rf)
+        ax_rf.set_xlabel('Importance')
+        ax_rf.set_title('Top 10 Feature Importances (Random Forest)')
+        st.pyplot(fig_rf)
+        
+        # Support Vector Machine Regression
+        st.header('Support Vector Machine Regression')
+        svm_model = SVR(kernel='linear')
+        svm_model.fit(X_train, y_train)
+        y_pred_svm = svm_model.predict(X_test)
+        mse_svm = mean_squared_error(y_test, y_pred_svm)
+        r2_svm = r2_score(y_test, y_pred_svm)
+        st.write('### SVM Model Performance')
+        st.write(f'Mean Squared Error: {mse_svm:,.2f}')
+        st.write(f'R-squared: {r2_svm:.2f}')
+
+        # Visualization of SVM Predictions vs Actuals
+        st.write('### Visualization of SVM Predictions vs Actuals')
+        plt.figure(figsize=(10, 6))
+        plt.scatter(y_test, y_pred_svm, alpha=0.3)
+        plt.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], 'k--', lw=4)
+        plt.xlabel('Actual')
+        plt.ylabel('Predicted')
+        plt.title('SVM: Actual vs Predicted Values')
+        st.pyplot(plt)
+
 
 # Sidebar for navigation
 
