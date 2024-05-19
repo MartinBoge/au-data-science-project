@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import altair as alt
-from etl.utils import read_sql_table
 import statsmodels.api as sm
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
@@ -9,7 +8,7 @@ from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.svm import SVR
 
-from run_etls import etl
+from etl.utils import read_sql_table
 
 
 # Define the navigation structure
@@ -241,11 +240,9 @@ def analysis_page():
 
 st.sidebar.title("Navigation")
 page = st.sidebar.radio("Choose a page", ("Data Exploration", "Data Analysis"))
-st.sidebar.button("Run ETLs", on_click=etl)
 
 # Display pages based on navigation choice
 if page == "Data Exploration":
     exploration_page()
 elif page == "Data Analysis":
     analysis_page()
-
