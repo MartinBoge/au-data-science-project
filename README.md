@@ -1,45 +1,25 @@
 # au-data-science-project
 
-## Developer notes
+This repo contain the source code for the course Data Science Project at Aarhus University.
 
-### Requirements
+The source code serves a streamlit application with a dashboard that power suppliers can use to produce their demand forecast.
 
-- python >= 3.11
+## How to run the app
 
-### Virtual environment
+Requirements:
 
-To setup local development environment:
+- Python >= 3.11
 
-1. Ensure python version: `python -V`.
-2. Setup virtual env: `python -m venv .venv`.
-3. Open a new terminal and run `pip install -r requirements.txt`.
+Steps:
 
-### Workflow - how to add a feature
+1. Install dependencies (recommended to use a virtual environment, see guide below): `pip install -r requirements.txt`
+2. Create a file in the root of the project and call it `.env` - this is used for environment variables
+3. Open the `.env` file and write the following `DMI_API_KEY=XXX` and replace `XXX` with an actual API key for the DMI Weather API. An API key can be acquired by subscribing to the metObsAPI from DMI at: https://dmiapi.govcloud.dk/#!/apis/48ed0c1b-ab40-473a-ad0c-1bab40073a51/detail
+4. In your terminal go to the directory `src/dsp` via: `cd src/dsp`
+5. Run ETL flows via: `python run_etls.py`
+6. Now you can run the streamlit app via: `streamlit run application.py`
 
-1. Open Fork
-2. Checkout main (double click the main branch)
-3. Pull
-4. Create a branch
-5. Checkout the new branch (double click on the branch on the left-hand side)
-6. Open VS Code and write your code
-7. When done coding, open Fork and go into the all commits section (left-hand side)
-8. Stage all the files that you wish to commit
-9. Commit
-10. Push
-11. Open Github and create pull request
-12. Merge pull request
-
-### Running ETLs
-
-To run ETLs:
-
-1. Ensure you have created a file called ".env" file in the root of the project. This file can also be refered to as the dotenv file. This file is under gitignore, thus you can safely put any secrets or api keys in here.
-2. Ensure that the dotenv file contains a line specifying your DMI API key like so: `DMI_API_KEY=###` - that is of course with your actual key instead of `###`. To see how the code reads this key have a look at the `bronze_weather.py` file inside the `etl` directory - in here we use the function `load_dotenv()`, which sets all of the variables from the dotenv file as environment variables. Then we're then able to call `os.environ.get("DMI_API_KEY")` to grab the key.
-3. Ensure that you have all requirements (dependencies) installed in your virtual environment: `pip install -r requirements.txt`.
-4. Now you can run: `python src/dsp/run_etls.py`. Note that inside the `run_etls.py` file you can specify the date ranges in which you wish to extract data for.
-5. See the file `src/dsp/example_select.py` on how to read a table from SQLite to a Pandas dataframe.
-
-Note that running the ETLs populate the following tables in the SQLite db:
+Note that running the ETL flows populate the following tables in a local SQLite db (file):
 
 - bronze_consumption
 - bronze_prices
@@ -49,7 +29,21 @@ Note that running the ETLs populate the following tables in the SQLite db:
 - silver_weather
 - gold_cpw (consumption, prices, and weather data all in one dataset)
 
-### Running the application
-1. Ensure you have streamlit installed. You can install streamlit writing `pip install streamlit` in your terminal.
-2. Ensure that you have all requirements (dependencies) installed in your virtual environment: `pip install -r requirements.txt`.
-3. Run the application `streamlit run src\dsp\etl\application.py`
+### Guide (Windows) - Python virtual environment
+
+Steps:
+
+1. Open a terminal in the root of the project
+2. Ensure you are on the correct version of Python via: `python -V`
+3. Create virtual environment via: `python -m venv .venv`
+4. Activate the virtual environment via: `source .venv/scripts/activate.ps1`. Note that you can skip this step in VS Code if you select your `.venv` as the Python interpreter and then open a new terminal.
+
+### Guide (Mac/Linux) - Python virtual environment
+
+Steps:
+
+1. Open a terminal in the root of the project
+2. Ensure you are on the correct version of Python via: `python3 -V` (you can also use a specific version of Python via `python3.11 -V`)
+3. Create virtual environment via: `python3 -m venv .venv`
+4. Activate the virtual environment via: `source .venv/bin/activate`. Note that you can skip this step in VS Code if you select your `.venv` as the Python interpreter and then open a new terminal.
+
